@@ -4,3 +4,6 @@ OpenGarage/node_modules/
 OpenGarage/package-lock.json
 docs/docs/assets/bins/flash.sh
 
+node_modules
+.claude/
+docs/debugging-security-plus.md

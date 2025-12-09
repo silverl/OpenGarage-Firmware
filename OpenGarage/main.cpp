@@ -54,6 +54,7 @@ static WiFiClient wificlient;
 static WiFiClient httpclient;
 PubSubClient mqttclient(wificlient);
 String mqtt_topic;
+String mqtt_debug_topic;  // Pre-constructed to avoid heap fragmentation in callback
 String mqtt_id;
 
 static String scanned_ssids;
@@ -1160,8 +1161,9 @@ void check_status_ap() {
 
 // Debug callback for garagelib - publishes Security+ debug messages to MQTT
 void mqtt_debug_callback(const char* message) {
-	if (og.options[OPTION_DBEN].ival && og.options[OPTION_MQEN].ival && mqttclient.connected()) {
-		mqttclient.publish((mqtt_topic + "/OUT/DEBUG").c_str(), message);
+	if (og.options[OPTION_DBEN].ival && og.options[OPTION_MQEN].ival &&
+	    mqttclient.connected() && mqtt_debug_topic.length() > 0) {
+		mqttclient.publish(mqtt_debug_topic.c_str(), message);
 	}
 }
 
@@ -1183,6 +1185,10 @@ bool mqtt_connect_subscribe() {
 				mqttclient.subscribe(mqtt_topic.c_str());
 				mqttclient.subscribe((mqtt_topic +"/IN/#").c_str());
 				mqttclient.publish((mqtt_topic+"/OUT/STATUS").c_str(), "online", true);
+				// Send test message to verify debug logging works
+				if (og.options[OPTION_DBEN].ival && mqtt_debug_topic.length() > 0) {
+					mqttclient.publish(mqtt_debug_topic.c_str(), "[DEBUG] MQTT debug logging enabled");
+				}
 				DEBUG_PRINTLN(F("......Success, Subscribed to MQTT Topic"));
 				mqtt_subscribe_timeout = curr_utc_time + 5; // if successful, don't check for 5 seconds
 				return true;
@@ -1872,6 +1878,7 @@ void do_loop() {
 						mqtt_id = get_ap_ssid();
 						mqtt_topic = og.options[OPTION_MQTP].sval;
 						if(mqtt_topic.length()==0) mqtt_topic = og.options[OPTION_NAME].sval;
+						mqtt_debug_topic = mqtt_topic + "/OUT/DEBUG";
 						mqttclient.setServer(og.options[OPTION_MQTT].sval.c_str(), og.options[OPTION_MQPT].ival);
 						mqttclient.setCallback(mqtt_callback);
 						mqtt_connect_subscribe();
