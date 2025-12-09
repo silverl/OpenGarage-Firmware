@@ -82,6 +82,7 @@ OptionStruct OpenGarage::options[] = {
 	{"mqur", 0, 0, ""},
 	{"mqpw", 0, 0, ""},
 	{"mqtp", 0, 0, ""},
+	{"dben", 0, 1, ""},
 	{"emen", 0, 1, ""},
 	{"smtp", 0, 0, DEFAULT_SMTP_SERVER},
 	{"sprt", DEFAULT_SMTP_PORT, 65535, ""},

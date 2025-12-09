@@ -30,7 +30,6 @@
 #include <DHTesp.h>
 #include <DallasTemperature.h>
 #include <EMailSender.h>
-#include <garagelib.cpp>
 #include "defines.h"
 
 struct OptionStruct {

@@ -99,6 +99,7 @@ input[type="radio"].green:checked + label span{ background-color:#00A000; }
 <tr class='mqt'><td><b>MQTT Username:</b></td><td><input type='text' size=16 maxlength=64 id='mqur' data-mini='true' placeholder='(optional)'></td></tr>
 <tr class='mqt'><td><b>MQTT Password:</b></td><td><input type='password' size=16 maxlength=64 id='mqpw' data-mini='true' placeholder='(unchanged if left blank)'></td></tr>
 <tr class='mqt'><td><b>MQTT Topic:</b></td><td><input type='text' size=16 maxlength=64 id='mqtp' data-mini='true' placeholder='(optional)'></td></tr>
+<tr class='mqt'><td colspan=2><input type='checkbox' id='dben' data-mini='true'><label for='dben'>Enable Debug (Security+)</label></td></tr>
 <tr class='mqt'><td colspan=2><hr></td></tr>
 <tr><td colspan=2><input type='checkbox' id='emen' data-mini='true' onclick='update_email()'><label for='emen'>Enable Email Notifications</label></td></tr>
 <tr class='email'><td><b>SMTP Server:</b></td><td><input type='text' size=16 maxlength=64 id='smtp' data-mini='true'></td></tr>
@@ -262,6 +263,7 @@ bc('name',1);bc('auth',1);bc('bdmn',1);bc('iftt',1);
 bc('mqtt',1);bc('mqur',1);bc('mqtp',1);bc('mqpt');
 if($('#mqpw').val().length>0) bc('mqpw',1);
 comm+='&mqen='+(eval_cb('#mqen')?1:0);
+comm+='&dben='+(eval_cb('#dben')?1:0);
 bc('smtp',1);bc('send',1);bc('apwd',1);bc('recp',1);bc('sprt');
 comm+='&emen='+(eval_cb('#emen')?1:0);
 bc('bprt');bc('ntp1',1);bc('host',1);
@@ -394,6 +396,7 @@ $('#mqtt').val(jd.mqtt);
 if(jd.mqur) $('#mqur').val(jd.mqur);
 if(jd.mqtp) $('#mqtp').val(jd.mqtp);
 if(jd.mqpt) $('#mqpt').val(jd.mqpt);
+if(jd.dben>0) cbt('dben');
 update_mqtt();
 if(jd.emen>0) cbt('emen');
 $('#smtp').val(jd.smtp);

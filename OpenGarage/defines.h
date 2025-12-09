@@ -239,6 +239,7 @@ typedef enum {
 	OPTION_MQUR,    // MQTT user name (optional)
 	OPTION_MQPW,    // MQTT password (optional)
 	OPTION_MQTP,    // MQTT topic (optional)
+	OPTION_DBEN,    // Debug enable (MQTT debug output)
 	OPTION_EMEN,	// Email enable
 	OPTION_SMTP,	// SMTP Server
 	OPTION_SPRT,	// SMTP Port

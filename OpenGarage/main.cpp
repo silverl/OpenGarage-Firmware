@@ -35,6 +35,7 @@
 #include "pitches.h"
 #include "OpenGarage.h"
 #include "espconnect.h"
+#include <garagelib.cpp>
 
 OpenGarage og;
 OTF::OpenThingsFramework *otf = NULL;
@@ -86,6 +87,7 @@ SecPlus1::Garage secplus1_garage(PIN_SW_RX, PIN_SW_TX);
 SecPlus2::Garage secplus2_garage(0x777, PIN_SW_RX, PIN_SW_TX);
 
 void do_setup();
+void mqtt_debug_callback(const char* message);
 
 void otf_send_html_P(OTF::Response &res, const __FlashStringHelper *content) {
 	res.writeStatus(200, F("OK"));
@@ -1002,6 +1004,9 @@ void do_setup() {
 			break;
 	}
 
+	// Register debug callback for Security+ protocol logging
+	garagelib_set_debug_callback(mqtt_debug_callback);
+
 	if(!otf) {
 		const String otfDeviceKey = og.options[OPTION_AUTH].sval;
 
@@ -1150,6 +1155,13 @@ void check_status_ap() {
 			Serial.println(F("secplus"));
 		}
 		cs_timeout = millis() + 2000;
+	}
+}
+
+// Debug callback for garagelib - publishes Security+ debug messages to MQTT
+void mqtt_debug_callback(const char* message) {
+	if (og.options[OPTION_DBEN].ival && og.options[OPTION_MQEN].ival && mqttclient.connected()) {
+		mqttclient.publish((mqtt_topic + "/OUT/DEBUG").c_str(), message);
 	}
 }
 
